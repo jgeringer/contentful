@@ -37,7 +37,7 @@ export default {
     client
       .getEntries({
         content_type: "category",
-        "fields.title": "Wilson"
+        "fields.title": "Wilson" //"Filippo Berio"
       })
       .then(function(response) {
         console.log(response.items);
