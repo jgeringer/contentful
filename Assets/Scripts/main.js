@@ -4,7 +4,7 @@ import Vue from 'vue'
 import store from '@/Scripts/store'
 import router from '@/Scripts/router'
 import icon from '@/Vue/Components/icon.vue'
-import casestudies from '@/Vue/Components/casestudies.vue'
+//import casestudies from '@/Vue/Components/casestudies.vue'
 import first from '@Components/first.vue'
 import './vueImports'
 import accordion from '@/Scripts/custom/accordion.js'
@@ -22,7 +22,7 @@ let App = new Vue({ // eslint-disable-line no-unused-vars
     store,
     components: {
         icon,
-        casestudies,
+        //casestudies,
         first
     }
 })
