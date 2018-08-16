@@ -1,12 +1,28 @@
 <template>
     <div>
-        <h1 v-text="title"></h1>
         <div class="article-text">
             <vuemarkdown :source="message"></vuemarkdown>
         </div>
-        <div class="Grid">
-            <casestudy :result="item.fields" v-for="item in items" :key="item.id"></casestudy>
+        <div class="Grid Grid--withExtraWideGutter container--cases">
+            <casestudy :result="item.fields" v-for="item in items" :key="item.id" class="Grid-cell u-md-size1of3"></casestudy>
         </div>
+        
+        <div class="ContentWidth" v-if="bios">
+            <h3 class="container footer-heading">
+                <span>Leadership Bios</span>
+            </h3>
+            <ol class="bio">
+                <li class="container" v-for="bio in bios" :key="bio.id">
+                    <div class="bio-photo">
+                        <img :src="bio.fields.image.fields.file.url">
+                    </div>
+                    <div class="bio-detail">
+                        <vuemarkdown :source="bio.fields.message"></vuemarkdown>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
     </div>
 </template>
 
@@ -22,7 +38,8 @@ export default {
         return {
             title: '',
             message: '',
-            items: []
+            items: [],
+            bios: null
         };
     },
     props: ['id', '$route.params.id'],
@@ -38,41 +55,42 @@ export default {
         let vm = this
 
         client
-        .getEntries({
-            content_type: "category",
-            'fields.slug': this.$route.params.id
-            //"fields.title": "Filippo Berio" //"Wilson" //"Filippo Berio"
-        })
-        .then(function(response) {
-            if(!response.items.length) return
+            .getEntries({
+                content_type: "category",
+                'fields.slug': this.$route.params.id
+                //"fields.title": "Filippo Berio" //"Wilson" //"Filippo Berio"
+            })
+            .then(function(response) {
+                if(!response.items.length) return
 
-            console.log(response.items);
+                console.log(response.items);
 
-            let fieldData = response.items[0]
-            let contentId = fieldData.sys.id
+                let fieldData = response.items[0]
+                let contentId = fieldData.sys.id
 
-            renderCategory(fieldData.fields)
-            getCaseStudies(contentId)
-        })
-        .catch(console.error)
+                renderCategory(fieldData.fields)
+                getCaseStudies(contentId)
+            })
+            .catch(console.error)
 
         function renderCategory(data) {
             console.log("data:", data);
             vm.title  = data.title
             vm.message  = data.message
+            vm.bios  = data.bios
         }
 
         function getCaseStudies(contentId) {
-        client
-            .getEntries({
-            links_to_entry: contentId // Wilson (Shows json for everything that's linked to Wilson)
-            })
-            .then(function(response){
-            console.warn('response..', response.items)
-            vm.items = response.items //console.log(response.items)
-            console.warn(vm)
-            })
-            .catch(console.error);
+            client
+                .getEntries({
+                    links_to_entry: contentId // Wilson (Shows json for everything that's linked to Wilson)
+                })
+                .then(function(response){
+                console.warn('response..', response.items)
+                vm.items = response.items //console.log(response.items)
+                console.warn(vm)
+                })
+                .catch(console.error);
         }
     },
     components: {

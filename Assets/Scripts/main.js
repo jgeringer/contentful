@@ -8,9 +8,8 @@ import icon from '@/Vue/Components/icon.vue'
 import first from '@Components/first.vue'
 import './vueImports'
 import accordion from '@/Scripts/custom/accordion.js'
-import {
-    slider
-} from '@/Scripts/custom/slider.js'
+import { slider } from '@/Scripts/custom/slider.js'
+//import card from '@/Scripts/custom/card.js'
 
 // generate svg sprite
 const files = require.context('@/Images/svg/symbol/', false, /.*\.svg$/)
