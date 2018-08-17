@@ -4,7 +4,7 @@
             <vuemarkdown :source="message"></vuemarkdown>
         </div>
         <div class="Grid Grid--withExtraWideGutter container--cases">
-            <casestudy :result="item.fields" v-for="item in items" :key="item.id" class="Grid-cell u-md-size1of3"></casestudy>
+            <casestudy :result="caseStudy.fields" v-for="caseStudy in caseStudies" :key="caseStudy.id" class="Grid-cell u-md-size1of3"></casestudy>
         </div>
         
         <div class="ContentWidth" v-if="bios">
@@ -29,47 +29,37 @@
 <script>
 import casestudy from "../Components/casestudy.vue";
 import vuemarkdown from 'vue-markdown'
-
-var contentful = require('contentful')
+import client from '@/Scripts/contentful'
 
 export default {
     name: 'CaseStudies',
+    props: ['client', '$route.params.client'],
     data() {
         return {
             title: '',
             message: '',
-            items: [],
+            caseStudies: [],
             bios: null
         };
     },
-    props: ['id', '$route.params.id'],
-     mounted() {
-        //console.warn(' $route.params.id: ',  this.id)
-        console.warn(' this: ',  this.$route.params.id) 
-
-        var client = contentful.createClient({
-            space: "008bxitgtft2",
-            accessToken: "Dac4229750f09cd6d98f70a28027d9f0d8f0e696d8e3891fbcb588d010a006d4"
-        })
+    mounted() {
+        console.warn(' client!: ',  this.$route.params.client) 
 
         let vm = this
 
         client
             .getEntries({
                 content_type: "category",
-                'fields.slug': this.$route.params.id
-                //"fields.title": "Filippo Berio" //"Wilson" //"Filippo Berio"
+                'fields.slug': this.$route.params.client
             })
             .then(function(response) {
                 if(!response.items.length) return
-
                 console.log(response.items);
 
                 let fieldData = response.items[0]
                 let contentId = fieldData.sys.id
 
                 renderCategory(fieldData.fields)
-                getCaseStudies(contentId)
             })
             .catch(console.error)
 
@@ -78,19 +68,7 @@ export default {
             vm.title  = data.title
             vm.message  = data.message
             vm.bios  = data.bios
-        }
-
-        function getCaseStudies(contentId) {
-            client
-                .getEntries({
-                    links_to_entry: contentId // Wilson (Shows json for everything that's linked to Wilson)
-                })
-                .then(function(response){
-                console.warn('response..', response.items)
-                vm.items = response.items //console.log(response.items)
-                console.warn(vm)
-                })
-                .catch(console.error);
+            vm.caseStudies = data.caseStudies
         }
     },
     components: {
@@ -101,6 +79,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    p{font-size:16px;color:#fff;background:#000;}
-    a{color:aqua;}
+    
 </style>

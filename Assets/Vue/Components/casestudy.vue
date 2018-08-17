@@ -22,11 +22,7 @@
     export default {
         name: 'casestudy',
         props: ['result'],
-        data() {
-            return {}
-        },
         mounted(){
-            console.log('mounted case study result...')
             console.log(this.result)
         },
         methods: {
@@ -35,11 +31,11 @@
                 let $this = this.$el.firstChild
         
                 let cardCloneX = $this.offsetLeft
-                let cardCloneY = $this.offsetTop - $this.scrollTop //$this.position().top
+                let cardCloneY = $this.offsetTop - document.documentElement.scrollTop
                 let cardCloneW = $this.offsetWidth
                 let cardCloneH = $this.offsetHeight
 
-                let cardClone = $this.cloneNode(true) //$this.clone().insertAfter($this)
+                let cardClone = $this.cloneNode(true)
                 $this.parentNode.appendChild(cardClone)
                 
                 cardClone.style.top = cardCloneY + 'px'
@@ -54,7 +50,7 @@
                     
                     let $close = document.createElement('div')
                     $close.classList.add('btn-close')
-                    $close.innerHTML = `<svg class="icon icon-cross" @click="closeCard"><use xlink:href="#icon-cross"></use></svg>`
+                    $close.innerHTML = `<svg class="icon icon-cross" @click="closeCard"><use xlink:href="#cross"></use></svg>`
                     cardClone.appendChild($close);
 
                     //after the animation is done, then add the slider
@@ -75,12 +71,11 @@
                     }
 
                     $close.addEventListener('click', function(e){
-                        console.warn('clickeed')
                         $close.remove()
 
                         //console.warn(cardClone.querySelectorAll('.single-item').slick('slickCurrentSlide'))
-
                         //let timer = (!!cardClone.querySelectorAll('.single-item').length ? 0 : 500) 
+
                         let timer = 500
 
                         //cardClone.querySelectorAll('.single-item').slick('slickGoTo', 0)
